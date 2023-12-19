@@ -7,8 +7,8 @@ api_version = "2023-10"
 
 [[extensions]]
 type = "ui_extension"
-name = "tomasz-upsells-ui-ext"
-handle = "tomasz-upsells-ui-ext"
+name = "tomasz-free-gift-ext"
+handle = "tomasz-free-gift-ext"
 
 # Controls where in Shopify your extension will be injected,
 # and the file that contains your extension’s source code. Learn more:
@@ -16,11 +16,7 @@ handle = "tomasz-upsells-ui-ext"
 
 [[extensions.targeting]]
 module = "./src/Checkout.tsx"
-target = "purchase.checkout.cart-line-list.render-after"
-
-# [[extensions.targeting]]
-# module = "./src/CheckoutFreeGift.tsx"
-# target = "purchase.checkout.block.render"
+target = "purchase.checkout.block.render"
 
 [extensions.capabilities]
 # Gives your extension access to directly query Shopify’s storefront API.
@@ -49,13 +45,14 @@ api_access = true
 
 [extensions.settings]
 [[extensions.settings.fields]]
-key = "upsell_title"
-type = "single_line_text_field"
-name = "Upsell title"
-description = "Enter a title for the Upsell extension"
+key = "gift_variant"
+type = "variant_reference"
+name = "Select Gift Item"
 
 [[extensions.settings.fields]]
-key = "selected_variant"
-type = "variant_reference"
-name = "Select Variant"
-description = "Select Product to upsell"
+key = "min_cart_total"
+type = "number_decimal"
+name = "Minimum Cart Total"
+description = "Minimum cart total required to qualify for free gift"
+
+

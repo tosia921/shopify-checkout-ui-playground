@@ -1,5 +1,4 @@
 import {
-  Banner,
   useApi,
   useTranslate,
   reactExtension,
@@ -13,7 +12,6 @@ import {
   BlockSpacer,
   Divider,
   useCartLines,
-  useSubtotalAmount,
   useSettings,
   useApplyCartLinesChange
 } from '@shopify/ui-extensions-react/checkout';
@@ -24,8 +22,6 @@ export default reactExtension(
   'purchase.checkout.cart-line-list.render-after',
   () => <Extension />,
 );
-
-// const variantID = "gid://shopify/ProductVariant/45204979188014"
 
 interface VariantData {
   title: string
@@ -58,7 +54,16 @@ function Extension() {
   const applyCartLinesChange = useApplyCartLinesChange()
 
   const settings = useSettings()
-  const variantID = settings.selected_variant as string
+
+  let variantID;
+
+  variantID = settings.selected_variant as string
+  const variantIDDefault = "gid://shopify/ProductVariant/45204979188014"
+
+  if (!variantID) {
+    variantID = variantIDDefault
+  }
+
   const title = settings.upsell_title as string
 
   useEffect(() => {
@@ -94,9 +99,7 @@ function Extension() {
 
     }
 
-    if(variantID) {
-      getVariantData()
-    }
+    getVariantData()
   }, [])
 
   useEffect(() => {
@@ -145,10 +148,14 @@ function Extension() {
             borderRadius={"base"}
             borderWidth={"base"}
           />
-          <BlockStack spacing="tight">
+          <BlockStack spacing="none">
             <Text>
-              {variantData.product.title} - {variantData.title}
+              {variantData.product.title}
             </Text>
+            <Text size={'small'}>
+              - {variantData.title}
+            </Text>
+            <BlockSpacer spacing={"tight"}/>
             <Text>
               {variantData.priceV2.amount} {variantData.priceV2.currencyCode}
             </Text>
