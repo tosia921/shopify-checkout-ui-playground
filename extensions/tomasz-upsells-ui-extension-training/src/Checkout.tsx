@@ -14,6 +14,7 @@ import {
   Divider,
   useCartLines,
   useSubtotalAmount,
+  useSettings,
   useApplyCartLinesChange
 } from '@shopify/ui-extensions-react/checkout';
 
@@ -24,7 +25,7 @@ export default reactExtension(
   () => <Extension />,
 );
 
-const variantID = "gid://shopify/ProductVariant/45204979188014"
+// const variantID = "gid://shopify/ProductVariant/45204979188014"
 
 interface VariantData {
   title: string
@@ -55,9 +56,10 @@ function Extension() {
 
   const cartLines = useCartLines()
   const applyCartLinesChange = useApplyCartLinesChange()
-  const subtotalAmount = useSubtotalAmount()
 
-  console.log(subtotalAmount)
+  const settings = useSettings()
+  const variantID = settings.selected_variant as string
+  const title = settings.upsell_title as string
 
   useEffect(() => {
     async function getVariantData() {
@@ -92,7 +94,9 @@ function Extension() {
 
     }
 
-    getVariantData()
+    if(variantID) {
+      getVariantData()
+    }
   }, [])
 
   useEffect(() => {
@@ -117,14 +121,14 @@ function Extension() {
   }, [isSelected])
 
 
-  if (!variantData) {
+  if (!variantID || !variantData) {
     return null
   }
   return (
     <>
       <Divider />
       <BlockSpacer spacing={"base"}/>
-      <Heading level={2}>Other Products You May Like</Heading>
+      <Heading level={2}>{ title ? title : ''}</Heading>
       <BlockSpacer spacing={"base"}/>
       <Pressable onPress={() => setIsSelected(!isSelected)}>
         <InlineLayout
